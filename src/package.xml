@@ -21,6 +21,15 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>User.Bonus_Compared_to_Industry__c</members>
+        <members>User.Bonus__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Callout_Endpoints__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>

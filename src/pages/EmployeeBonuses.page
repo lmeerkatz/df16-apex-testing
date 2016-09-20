@@ -1,4 +1,4 @@
-<apex:page standardController="Opportunity" extensions="EmployeeBonusController">
+<apex:page standardController="Opportunity" extensions="EmployeeBonusExtension">
    <apex:pageMessages ></apex:pageMessages>
    <apex:pageBlock title="Employees">
       <apex:pageBlockTable value="{!employees}" var="employee">
