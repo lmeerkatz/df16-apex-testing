@@ -1,7 +1,8 @@
 public class EmployeeBonusController {
 
-    public static List<Employee> getEmployeeList() {
-        List<Employee> employees;
+    @AuraEnabled
+    public static Object getEmployeeList() {
+        List<EmployeeBonusController.Employee> employees;
         if (!Schema.sObjectType.User.fields.Bonus__c.isAccessible()) {
             List<AggregateResult> results = [ SELECT OwnerId, SUM(Amount) total FROM Opportunity 
                                       	WHERE CloseDate = THIS_YEAR AND 
@@ -24,9 +25,11 @@ public class EmployeeBonusController {
                 employees.add(emp);
             }
         } else {
-            employees = new List<Employee>();
+            employees = new List<EmployeeBonusController.Employee>();
         }
-        return employees;
+        String serialized = JSON.serialize(employees);
+        Object deserialized = JSON.deserializeUntyped(serialized);
+        return deserialized;
     } 
     
     public class Employee {

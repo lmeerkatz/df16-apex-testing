@@ -1,10 +1,36 @@
-<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
-	<aura:attribute name="employees" type="EmployeeBonusController.Employee[]" description="" />
+<aura:component controller="EmployeeBonusController" implements="flexipage:availableForAllPageTypes" access="global" >
+    <aura:attribute name="employees" type="Object" description="" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
-    <div class="slds-box">
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+      <thead>
+        <tr class="slds-text-title--caps">
+          <th scope="col">
+            <div class="slds-truncate" title="Employee Name">Employee Name</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Total Opportunities">Total Opportunities</div>
+          </th>
+          <th scope="col">
+            <div class="slds-truncate" title="Bonus">Bonus</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
         <aura:iteration items="{!v.employees}" var="employee">
-            <ui:outputText value="{!employee.Name}"/>
+        <tr>
+          <th scope="row" data-label="Employee Name">
+            <div class="slds-truncate"><a href="javascript:void(0);">{!employee.name}</a></div>
+          </th>
+          <td data-label="Total Opportunities">
+            <div class="slds-truncate"><ui:outputCurrency value="{!employee.totalClosedOpps}"/></div>
+          </td>
+          <td data-label="Bonus">
+              <div class="slds-truncate"><ui:outputCurrency value="{!employee.bonus}"/></div>
+          </td>
+        </tr>
         </aura:iteration>
-    </div>
+      </tbody>
+    </table>
+    
 </aura:component>
