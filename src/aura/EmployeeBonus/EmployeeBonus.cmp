@@ -1,0 +1,10 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+	<aura:attribute name="employees" type="EmployeeBonusController.Employee[]" description="" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div class="slds-box">
+        <aura:iteration items="{!v.employees}" var="employee">
+            <ui:outputText value="{!employee.Name}"/>
+        </aura:iteration>
+    </div>
+</aura:component>

@@ -1,0 +1,22 @@
+<apex:page standardController="Opportunity" extensions="EmployeeBonusController">
+   <apex:pageMessages ></apex:pageMessages>
+   <apex:pageBlock title="Employees">
+      <apex:pageBlockTable value="{!employees}" var="employee">
+         <apex:column value="{!employee.name}">
+             <apex:facet name="header">Name</apex:facet>
+          </apex:column>
+         <apex:column >
+             <apex:facet name="header">Bonus</apex:facet>
+             <apex:outputText value="{0, Number, Currency}">
+                 <apex:param value="{!employee.bonus}" />
+             </apex:outputText>
+          </apex:column>
+         <apex:column >
+             <apex:facet name="header">Total Closed Opportunities This Year</apex:facet>
+             <apex:outputText value="{0, Number, Currency}">
+                 <apex:param value="{!employee.totalClosedOpps}" />
+             </apex:outputText>
+          </apex:column>
+      </apex:pageBlockTable>
+   </apex:pageBlock>
+</apex:page>
