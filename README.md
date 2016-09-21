@@ -191,19 +191,18 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
 
 *Calculate bonus for an employee with 200 closed opps*
 <pre><code>
-   // test employee bonus with several opps
+    // test employee bonus with several opps
     @isTest 
     static void testBonusBulk(){
-        // set up data
-        User employee = TestData.standardUser;
-        
+    	// set up data
+    	User employee = TestData.standardUser;
         List<Opportunity> opps = TestData.createOpportunities(testAccount, 200);
         for (Opportunity opp : opps) {
             opp.Amount = 10000;
             opp.StageName = 'Closed Won';
         }
         insert opps;
-
+        
         // execute the logic we're testing
         EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
         
