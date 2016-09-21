@@ -5,11 +5,14 @@ Presented by [Laura Meerkatz](https://github.com/lmeerkatz) and [Adam Lincoln](h
 This readme provides resources related to that session. This repository should also contain everything you need to deploy this code to a dev org.
 
 ## Why we write tests
+Short answer? Because we like to sleep at night. 
+
+Longer answer:
 * During development, tests show us where our architectural plan may be wrong.
 * At initial release, tests give us proof that our new code does what we want.
-* At feature enhancement, provides confidence that changes to our code do not break existing functionality.
+* When we update existing code, tests give us confidence that changes to our code do not break existing functionality.
 * Test runs during deployment warn us that new code is trying to break existing code (and prevents that code from deploying).
-* Running tests in production can tell us that a configuration change has broken our code.
+* Running tests in production can tell us when a configuration change has broken our code.
 
 ## Testing Basics
 ### Test Class Structure
