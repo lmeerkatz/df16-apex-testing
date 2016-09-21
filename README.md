@@ -273,3 +273,37 @@ You can have a single method in each test class annotated with [@TestSetup](http
         insert testAccount;
     }
 </code></pre>
+
+### Use System.runAs() to test user access
+
+In a test, you can execute specific blocks of code as a certain user, which means that you can use tests to verify that a user can do the things they should be able to do, and can't do the things they should be blocked from doing. 
+
+<code><pre>
+@isTest 
+static void testPrivilegedUser(){
+	Boolean exceptionCaught;
+	System.runAs(TestData.adminUser){
+		try {
+			SomeClass.doDangerousOperation();
+		} catch(Exception e) {
+			exceptionCaught = true;
+		}
+	}
+	System.assertEquals(false, exceptionCaught, 'Admin should be able to execute doDangerousOperation');
+}
+</pre></code>
+
+<code><pre>
+@isTest 
+static void testLimitedUser(){
+	Boolean exceptionCaught;
+	System.runAs(TestData.standardUser){
+		try {
+			SomeClass.doDangerousOperation();
+		} catch(Exception e) {
+			exceptionCaught = true;
+		}
+	}
+	System.assertEquals(true, exceptionCaught, 'Standard user should NOT be able to execute doDangerousOperation');
+}
+</pre></code>
