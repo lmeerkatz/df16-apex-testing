@@ -213,18 +213,22 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
         // assert expected results
         System.assertEquals(25000, employee.Bonus__c, 'Employee should be awarded the maximum bonus');
     }
-</pre></code>
+</code></pre>
+
 
 ## Best Practices
 
 ### Create your own data
 By default, your tests don't have access to data in your org. That's a good thing! 
-* It makes writing assertions easier. (You can do things like query for a count of all records and know that you're only getting back results you created in your test.)
+* Isolating makes writing assertions easier. (You can do things like query for a count of all records and know that you're only getting back results you created in your test.)
 * It prevents row-lock errors. (If your tests are updating a record from your real dataset and a real user tries to update that record at the same time, your user can get locked out of making changes.)
 
-You can override that behavior by adding the [(SeeAllData=true) annotation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_seealldata_using.htm) to your test class or method. There are a few cases where this is necessary, but as a general rule you should avoid it. 
+You can override that behavior by adding the ([SeeAllData=true] (https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_seealldata_using.htm)) annotation to your test class or method. There are a few cases where this is necessary, but as a general rule you should avoid it. 
+
+*Note: There are a few objects like User that are available to tests regardless of whether SeeAllData is set. Changes made to these records in tests are not persisted outside of tests.
 
 ### Use test data factories
+
 A [test data factory](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_utility_classes.htm) is a [class](/blob/master/src/classes/TestData.cls) that makes it easy to create several records quickly, so you don't have to spend as much time setting up data for your tests.
 
 <pre><code>
