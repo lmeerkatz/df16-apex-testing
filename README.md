@@ -41,18 +41,18 @@ We have code to [calculate employee bonuses](/blob/master/src/classes/EmployeeBo
 
 **What should we test?**
 
-Things that should happen:
+*Things that should happen:*
 - Employees with closed won opportunities should get a bonus based on the amount
 - Employees with lots of closed won opps should receive the maximum bonus
 
-Things that shouldn't happen:
+*Things that shouldn't happen:*
 - Employees who don't have closed opps should not get a bonus
 - Open opps shouldn't count toward the bonus amount
 
-Exception testing:
+*Exception testing:*
 - A negative total opp amount should result in an exception
 
-Bulk testing:
+*Bulk testing:*
 - Calculate bonus for an employee with 200 closed opps
 
 Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusManagerTest.cls)):
@@ -123,7 +123,7 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
         User employee = TestData.standardUser;
 
        	// execute the logic we're testing
-		EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
+	EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
         
         // query for updated record
         employee = queryForUser(employee.Id);
@@ -149,7 +149,7 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
         insert opps;
 
        	// execute the logic we're testing
-		EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
+	EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
         
         // query for updated record
         employee = queryForUser(employee.Id);
