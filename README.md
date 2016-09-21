@@ -380,3 +380,32 @@ System.assertEquals(2, employees.size(), 'The list should have two employees');
 </code></pre>
 
 You can see a [full code sample](/blob/master/src/classes/EmployeeBonusControllerTest.cls) here.
+
+### Callouts
+You can't do a callout from a test, but you can fake it. First, generate the response that you want to return by implementing HttpCalloutMock:
+<pre><code>@isTest
+public class EmployeeBonusCompareMock implements HttpCalloutMock {
+   public HttpResponse respond(HttpRequest req) {
+	// Look at req.getMethod(), req.getEndpoint() to decide what to return
+	HttpResponse resp = new HttpResponse();
+        resp.setHeader('Content-Type', 'application/json');
+        resp.setBody('{"id": 10000, "industry_average": 0.30}');
+        resp.setStatusCode(200);
+        return resp;
+    }
+}</code></pre>
+Then set the mock response in your test by using Test.setMock():
+<code><pre>Test.setMock(HttpCalloutMock.class, new EmployeeBonusCompareMock());
+User testUser = TestData.standardUser;
+Test.startTest();
+Id qJobId = System.enqueueJob(new EmployeeBonusCompare(
+	testUser.Id
+));
+// All asynchronous work runs synchronously when Test.stopTest() is called
+Test.stopTest();
+
+// Requery to get newly computed Bonus_Compared_to_Industry__c value
+testUser = [SELECT Bonus_Compared_to_Industry__c FROM User WHERE Id = :testUser.Id];
+
+System.assertNotEquals(null, testUser.Bonus_Compared_to_Industry__c);</pre></code>
+You can see a [full code sample](/blob/master/src/classes/EmployeeBonusCompareTest.cls) here.
