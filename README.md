@@ -21,6 +21,7 @@ Longer answer:
 
 <pre><code>@isTest
 private class SampleTest {
+
 @TestSetup 
 static void setup(){
 	// insert sample data that you want for all test methods here
