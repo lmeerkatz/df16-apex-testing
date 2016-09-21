@@ -317,3 +317,66 @@ static void testLimitedUser(){
 	System.assertEquals(true, exceptionCaught, 'Standard user should NOT be able to execute doDangerousOperation');
 }
 </pre></code>
+
+## Special Cases
+
+### Visualforce Controllers and Extensions
+You can and should test the logic behind your Visualforce pages. Any action that is called from your controller can be tested in an Apex test. Actions in the page UI itself (including anything involving JavaScript) can be covered in end-to-end tests, but that is outside of Apex testing (and not covered here). 
+
+Here's how to set up a test for a custom controller:
+<pre><code>
+// set the current page
+PageReference pageRef = Page.EmployeeBonuses;
+Test.setCurrentPage(pageRef);
+
+// set up the controller
+EmployeeBonusController ctrl = new EmployeeBonusController();
+
+// call method(s) in the controller
+ctrl.doInit();
+
+// check the resulting data by referencing the property in the class
+List<EmployeeBonusExtension.Employee> employees = ctrl.employees;    
+
+// assert expectations 
+System.assertEquals(2, ctrl.employees.size(), 'The list should have two employees');
+System.assertEquals(0, ApexPages.getMessages().size(), 'There should be no error messages on the page');
+</code></pre>
+
+Extensions are exactly the same, with an additional step to set up the standard controller and pass it to the extension:
+<pre><code>
+// set the current page
+PageReference pageRef = Page.EmployeeBonuses;
+Test.setCurrentPage(pageRef);
+
+// set up the standard controller    
+ApexPages.StandardController standardCtrl = new ApexPages.StandardController(new Opportunity());
+
+// set up the extension, referencing the standard controller
+EmployeeBonusExtension extension = new EmployeeBonusExtension(standardCtrl);
+
+// call method(s) in the extension
+extension.doInit();
+
+// check the resulting data by referencing the property in the class
+List<EmployeeBonusExtension.Employee> employees = extension.employees;    
+
+// assert expectations 
+System.assertEquals(2, extension.employees.size(), 'The list should have two employees');
+System.assertEquals(0, ApexPages.getMessages().size(), 'There should be no error messages on the page');
+</code></pre>
+
+You can see a [full code sample](/blob/master/src/classes/EmployeeBonusExtensionTest.cls) here.
+
+### Lightning Component Controllers
+Lightning Component controllers are similar, but because all @AuraEnabled methods are static, you don't have to initialize the controller class. You also don't check for error messages from the controller because all error handling for Lightning Components is done on the client side.
+
+<pre><code>
+// call the @AuraEnabled method
+List<User> employees = EmployeeBonusController.getEmployeeList();
+
+// assert that you get the expected results
+System.assertEquals(2, employees.size(), 'The list should have two employees');
+</code></pre>
+
+You can see a [full code sample](/blob/master/src/classes/EmployeeBonusControllerTest.cls) here.
