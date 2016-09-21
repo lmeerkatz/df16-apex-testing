@@ -2,8 +2,10 @@ public class EmployeeBonusController {
 
     @AuraEnabled
     public static Object getEmployeeList() {
+        System.debug('UserInfo.getUserName(): ' + UserInfo.getUserName()); 
+        System.debug('Schema.sObjectType.User.fields.Bonus__c.isAccessible(): ' + Schema.sObjectType.User.fields.Bonus__c.isAccessible()); 
         List<EmployeeBonusController.Employee> employees;
-        if (!Schema.sObjectType.User.fields.Bonus__c.isAccessible()) {
+        if (Schema.sObjectType.User.fields.Bonus__c.isAccessible()) {
             List<AggregateResult> results = [ SELECT OwnerId, SUM(Amount) total FROM Opportunity 
                                       	WHERE CloseDate = THIS_YEAR AND 
                                       	IsWon = true
@@ -25,7 +27,7 @@ public class EmployeeBonusController {
                 employees.add(emp);
             }
         } else {
-            employees = new List<EmployeeBonusController.Employee>();
+            throw new AuraHandledException('You don\'t have access to view bonus information.');
         }
         String serialized = JSON.serialize(employees);
         Object deserialized = JSON.deserializeUntyped(serialized);

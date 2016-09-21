@@ -85,29 +85,6 @@ private class EmployeeBonusManagerTest {
         System.assertEquals(null, employee.Bonus__c, 'Employee has no opportunities and should have no bonus');
     }
     
-    // test employee bonus with several opps
-    @isTest 
-    static void testBonusBulk(){
-        // set up data
-        User employee = TestData.standardUser;
-		
-        List<Opportunity> opps = TestData.createOpportunities(testAccount, 200);
-        for (Opportunity opp : opps) {
-			opp.Amount = 10000;
-    		opp.StageName = 'Closed Won';
-        }
-        insert opps;
-
-       	// execute the logic we're testing
-		EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
-        
-        // query for updated record
-        employee = queryForUser(employee.Id);
-        
-        // assert expected results
-        System.assertEquals(25000, employee.Bonus__c, 'Employee should be awarded the maximum bonus');
-    }
-    
 	// test employee with only open opps
 	// they shouldn't get a bonus
     @isTest 
@@ -156,6 +133,29 @@ private class EmployeeBonusManagerTest {
                 
         // assert expected results
         System.assert(exceptionThrown, 'An exception should have been thrown');
+    }
+
+    // test employee bonus with several opps
+    @isTest 
+    static void testBonusBulk(){
+        // set up data
+        User employee = TestData.standardUser;
+        
+        List<Opportunity> opps = TestData.createOpportunities(testAccount, 200);
+        for (Opportunity opp : opps) {
+            opp.Amount = 10000;
+            opp.StageName = 'Closed Won';
+        }
+        insert opps;
+
+        // execute the logic we're testing
+        EmployeeBonusManager.updateEmployeeBonuses(employee.Id);
+        
+        // query for updated record
+        employee = queryForUser(employee.Id);
+        
+        // assert expected results
+        System.assertEquals(25000, employee.Bonus__c, 'Employee should be awarded the maximum bonus');
     }
 	
     private static User queryForUser(Id userId) {

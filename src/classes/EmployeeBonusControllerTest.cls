@@ -37,64 +37,55 @@ private class EmployeeBonusControllerTest {
     
     @isTest
     static void testViewPageAsAdmin() {
-        //EmployeeBonusController ctrl;
+        // check the data on the page
+        Object employeesObject = EmployeeBonusController.getEmployeeList();
+        String jsonString = JSON.serialize(employeesObject);
+
+        List<EmployeeBonusController.Employee> employees =
+          (List<EmployeeBonusController.Employee>)JSON.deserialize(JSONString, List<EmployeeBonusController.Employee>.class);
         
+        System.assertEquals(2, employees.size(), 'The list should have two employees');
+        Integer checkedEmployees = 0;
         
-        //    // set up page
-        //    PageReference pageRef = Page.EmployeeBonuses;
-        //    Test.setCurrentPage(pageRef);
-    
-        //    ApexPages.StandardController standardCtrl = new ApexPages.StandardController(new Opportunity());
-        //    ctrl = new EmployeeBonusController(standardCtrl);
-            
-        //    // check the data on the page
-        //    List<EmployeeBonusController.Employee> employees = ctrl.employees;    
-        //}
-        
-        //System.assertEquals(2, ctrl.employees.size(), 'The list should have two employees');
-        //Integer checkedEmployees = 0;
-        
-        //for (EmployeeBonusController.Employee employee : ctrl.employees) {
-        //    if (employee.Id == TestData.standardUser.Id) {
-        //        System.assertEquals('Standard Test User', employee.name);
-        //        System.assertEquals(25000, employee.totalClosedOpps);
-        //        System.assertEquals(250, employee.bonus);
-        //        checkedEmployees++;
-        //    } else if (employee.Id == TestData.adminUser.Id) {
-        //        System.assertEquals(10000, employee.totalClosedOpps);
-        //        System.assertEquals(100, employee.bonus);
-        //        checkedEmployees++;
-        //    }
-        //}
-        //System.assertEquals(2, checkedEmployees, 'Both employees should have been checked');
-        
-        //// check for error messages
-        //System.assertEquals(0, ApexPages.getMessages().size(), 'There should be no error messages on the page');
+        for (EmployeeBonusController.Employee employee : employees) {
+            if (employee.Id == TestData.standardUser.Id) {
+                System.assertEquals('Standard Test User', employee.name);
+                System.assertEquals(25000, employee.totalClosedOpps);
+                System.assertEquals(250, employee.bonus);
+                checkedEmployees++;
+            } else if (employee.Id == TestData.adminUser.Id) {
+                System.assertEquals(10000, employee.totalClosedOpps);
+                System.assertEquals(100, employee.bonus);
+                checkedEmployees++;
+            }
+        }
+        System.assertEquals(2, checkedEmployees, 'Both employees should have been checked');
     }
     
     // test view page as standard user
     // user should not have access to this data
     @isTest
     static void testViewPageAsStandardUser() {
-        //EmployeeBonusController ctrl;
+        List<EmployeeBonusController.Employee> employees;
+
+        Boolean exceptionThrown = false;
+
+        try {
+           System.runAs(TestData.standardUser) {
+                // check the data on the page
+                Object employeesObject = EmployeeBonusController.getEmployeeList();
+                String jsonString = JSON.serialize(employeesObject);
+
+                employees =
+                  (List<EmployeeBonusController.Employee>)JSON.deserialize(JSONString, List<EmployeeBonusController.Employee>.class);
+            } 
+        } catch (Exception ex) {
+            exceptionThrown = true;
+            System.assert(ex instanceOf AuraHandledException, 'Thrown exception should be an AuraHandledException');
+        }
+        System.assert(exceptionThrown, 'An exception should have been thrown');
         
-        //System.runAs(TestData.standardUser) {
-        //    // set up page
-        //    PageReference pageRef = Page.EmployeeBonuses;
-        //    Test.setCurrentPage(pageRef);
-    
-        //    ApexPages.StandardController standardCtrl = new ApexPages.StandardController(new Opportunity());
-        //    ctrl = new EmployeeBonusController(standardCtrl);
-            
-        //    // check the data on the page
-        //    List<EmployeeBonusController.Employee> employees = ctrl.employees;    
-        //}
-        
-        //System.assertEquals(0, ctrl.employees.size(), 'This user should not have access to employee bonus data');
-        
-        //// check for error messages
-        //System.assertEquals(1, ApexPages.getMessages().size(), 'There should be an error message on the page');
-        //System.assert(ApexPages.getMessages()[0].getDetail().contains('You don\'t have permission to view bonus information'));
+        System.assertEquals(null, employees, 'This user should not have access to employee bonus data');        
     }
     
 }
