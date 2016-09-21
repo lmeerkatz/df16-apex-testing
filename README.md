@@ -373,7 +373,7 @@ Lightning Component controllers are similar, but because all @AuraEnabled method
 
 <pre><code>
 // call the @AuraEnabled method
-List<User> employees = EmployeeBonusController.getEmployeeList();
+List&lt;User&gt; employees = EmployeeBonusController.getEmployeeList();
 
 // assert that you get the expected results
 System.assertEquals(2, employees.size(), 'The list should have two employees');
