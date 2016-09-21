@@ -215,6 +215,57 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
     }
 </pre></code>
 
+## Best Practices
 
+### Create your own data
+By default, your tests don't have access to data in your org. That's a good thing! 
+* It makes writing assertions easier. (You can do things like query for a count of all records and know that you're only getting back results you created in your test.)
+* It prevents row-lock errors. (If your tests are updating a record from your real dataset and a real user tries to update that record at the same time, your user can get locked out of making changes.)
 
+You can override that behavior by adding the [(SeeAllData=true) annotation](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_seealldata_using.htm) to your test class or method. There are a few cases where this is necessary, but as a general rule you should avoid it. 
 
+### Use test data factories
+A [test data factory](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_utility_classes.htm) is a [class](/blob/master/src/classes/TestData.cls) that makes it easy to create several records quickly, so you don't have to spend as much time setting up data for your tests.
+
+<pre><code>
+@isTest 
+public class TestData {
+    public static List<Account> createAccounts(Integer count) {
+		List<Account> accts = new List<Account>();
+        for (Integer i = 0; i < count; i++) {
+            // at a minimum, add enough data to pass validation rules
+            accts.add(new Account(
+                Name = 'Test Account ' + i
+            ));
+        }
+        return accts;
+    }
+    
+    public static List<Contact> createContacts(Account acct, Integer count) {
+        List<Contact> cons = new List<Contact>();
+        for (Integer i = 0; i < count; i++) {
+            cons.add(new Contact(
+                AccountId = acct.Id,
+            	FirstName = 'Joe',
+            	LastName = 'McTest ' + i
+            ));
+        }
+        return cons;
+    }
+    ...
+}
+</code></pre>
+
+You can also store test data as a static resource in a .csv file and load the records using [Test.loadData()](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_load_data.htm).
+
+### Use @TestSetup to create data for your test class in one step
+You can have a single method in each test class annotated with [@TestSetup](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_annotation_testsetup.htm?search_text=testsetup). This method will run once before any test methods run, and at the end of each test the data will be rolled back to its state before the test. Using @TestSetup makes writing your tests faster and it makes them run faster.
+
+<pre><code>
+    @TestSetup 
+    static void setup(){
+        Account testAccount = TestData.createAccounts(1)[0];
+        testAccount.Name = 'Apex Testing DF16 Co.';
+        insert testAccount;
+    }
+</code></pre>
