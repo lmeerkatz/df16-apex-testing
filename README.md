@@ -377,9 +377,7 @@ static void testCallout() {
 	User testUser = TestData.standardUser;
 	
 	Test.startTest();
-	Id qJobId = System.enqueueJob(new EmployeeBonusCompare(
-		testUser.Id
-	));
+	Id qJobId = System.enqueueJob(new EmployeeBonusCompare(testUser.Id));
 	// All asynchronous work runs synchronously when Test.stopTest() is called
 	Test.stopTest();
 	
