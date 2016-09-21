@@ -197,6 +197,7 @@ Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusM
     	// set up data
     	User employee = TestData.standardUser;
         List<Opportunity> opps = TestData.createOpportunities(testAccount, 200);
+        
         for (Opportunity opp : opps) {
             opp.Amount = 10000;
             opp.StageName = 'Closed Won';
