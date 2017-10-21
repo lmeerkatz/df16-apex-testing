@@ -17,7 +17,7 @@ Longer answer:
 ## Testing Basics
 ### Test Class Structure
 
-[Sample Test Class](/blob/master/src/classes/SampleTest.cls)
+[Sample Test Class](/src/classes/SampleTest.cls)
 
 <pre><code>@isTest
 private class SampleTest {
@@ -48,7 +48,7 @@ static void testSomething(){
 
 ### Sample Scenario
 
-We have code to [calculate employee bonuses](/blob/master/src/classes/EmployeeBonusManager.cls). Employees should earn a 1% bonus for all Closed Won opportunities this year. The maximum bonus is $25,000. If an employees total opp amount is negative, an exception is thrown.
+We have code to [calculate employee bonuses](/src/classes/EmployeeBonusManager.cls). Employees should earn a 1% bonus for all Closed Won opportunities this year. The maximum bonus is $25,000. If an employees total opp amount is negative, an exception is thrown.
 
 **What should we test?**
 
@@ -66,7 +66,7 @@ We have code to [calculate employee bonuses](/blob/master/src/classes/EmployeeBo
 *Bulk testing:*
 - Calculate bonus for an employee with 200 closed opps
 
-Here's what that looks like ([full code](/blob/master/src/classes/EmployeeBonusManagerTest.cls)):
+Here's what that looks like ([full code](/src/classes/EmployeeBonusManagerTest.cls)):
 
 *Employees with closed won opportunities should get a bonus based on the amount*
 <pre><code>// test employee with some open opps and some closed opps
@@ -344,7 +344,7 @@ List<EmployeeBonusExtension.Employee> employees = extension.employees;
 System.assertEquals(2, extension.employees.size(), 'The list should have two employees');
 System.assertEquals(0, ApexPages.getMessages().size(), 'There should be no error messages on the page');</code></pre>
 
-You can see a [full code sample](/blob/master/src/classes/EmployeeBonusExtensionTest.cls) here.
+You can see a [full code sample](/src/classes/EmployeeBonusExtensionTest.cls) here.
 
 ### Lightning Component Controllers
 Lightning Component controllers are similar, but because all @AuraEnabled methods are static, you don't have to initialize the controller class. You also don't check for error messages from the controller because all error handling for Lightning Components is done on the client side.
@@ -355,7 +355,7 @@ List&lt;User&gt; employees = EmployeeBonusController.getEmployeeList();
 // assert that you get the expected results
 System.assertEquals(2, employees.size(), 'The list should have two employees');</code></pre>
 
-You can see a [full code sample](/blob/master/src/classes/EmployeeBonusControllerTest.cls) here.
+You can see a [full code sample](/src/classes/EmployeeBonusControllerTest.cls) here.
 
 ### Callouts
 You can't do a callout from a test, but you can fake it. First, generate the response that you want to return by implementing HttpCalloutMock:
@@ -385,4 +385,4 @@ static void testCallout() {
 	testUser = [SELECT Bonus_Compared_to_Industry__c FROM User WHERE Id = :testUser.Id];
 	System.assertNotEquals(null, testUser.Bonus_Compared_to_Industry__c);
 }</pre></code>
-You can see a [full code sample](/blob/master/src/classes/EmployeeBonusCompareTest.cls) here.
+You can see a [full code sample](/src/classes/EmployeeBonusCompareTest.cls) here.
